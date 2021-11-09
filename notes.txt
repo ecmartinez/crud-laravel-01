@@ -1,0 +1,79 @@
+Curso:
+Crea un CRUD con Laravel, Sweetalert2, Toastr, VueJS y Axios.
+
+Github:
+https://github.com/jhonatanfdez/crudlstva
+
+
+=============================================================================================
+https://github.com/CodeSeven/toastr
+
+Install toastr:
+npm i toastr --save
+
+/resources/js/bootstrap.js
+window.toastr = require('toastr');
+
+create file in /resources/sass/toastr.scss put inside @import '~toastr/toastr';
+
+edit webpack.mix.js
+mix.js('resources/js/app.js', 'public/js')
+    .sass('resources/sass/app.scss', 'public/css')
+    .sass('resources/sass/toastr.scss', 'public/css');
+
+npm run dev
+
+
+add in head and body
+<link rel="stylesheet" href="{{ asset('css/toastr.css') }}">
+<script src="{{ asset('js/app.js') }}"></script>
+
+or
+
+add in resources/sass/app.scss
+@import '~toastr/toastr';
+
+npm run dev
+
+<link rel="stylesheet" href="{{ asset('css/app.css') }}">
+<script src="{{ asset('js/app.js') }}"></script>
+
+example
+toastr.success('This is an example', 'example');
+
+
+=============================================================================================
+
+https://sweetalert2.github.io/#download
+
+Install sweetalert2:
+npm i sweetalert2
+
+/resources/js/bootstrap.js
+window.Swal = require("sweetalert2");
+
+add in resources/sass/app.scss
+@import '~sweetalert2/src/sweetalert2';
+
+npm run dev
+
+<link rel="stylesheet" href="{{ asset('css/app.css') }}">
+<script src="{{ asset('js/app.js') }}"></script>
+
+example:
+Swal.fire({
+  title: 'Error!',
+  text: 'Do you want to continue',
+  icon: 'error',
+  confirmButtonText: 'Cool'
+})
+
+=============================================================================================
+
+php artisan tinker
+
+$datos = new App\Models\DatosP;
+$datos->nombre = 'Edgar Martinez';
+$datos->posicion = 'Auditor';
+$datos->salario = 987.55;
+$datos->save();
