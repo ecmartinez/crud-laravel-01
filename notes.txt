@@ -77,3 +77,9 @@ $datos->nombre = 'Edgar Martinez';
 $datos->posicion = 'Auditor';
 $datos->salario = 987.55;
 $datos->save();
+
+
+=============================================================================================
+Solution to queue with progress steps:
+
+https://sweetalert2.github.io/recipe-gallery/queue-with-progress-steps.html
