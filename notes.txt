@@ -74,7 +74,7 @@ php artisan tinker
 
 $datos = new App\Models\DatosP;
 $datos->nombre = 'Edgar Martinez';
-$datos->posicion = 'Auditor';
+$datos->posicion = 'auditor';
 $datos->salario = 987.55;
 $datos->save();
 
