@@ -2134,6 +2134,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -2190,9 +2191,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   text: "Posicion de este empleado",
                   input: "select",
                   inputOptions: {
-                    auditor: "Auditor",
-                    soporte: "Soporte",
-                    seguridad: "Seguridad"
+                    auditor: "auditor",
+                    soporte: "soporte",
+                    seguridad: "seguridad"
                   },
                   inputPlaceholder: "Selecciona una posicion",
                   inputValidator: function inputValidator(value) {
@@ -2353,6 +2354,67 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           return _ref2.apply(this, arguments);
         };
       }());
+    },
+    editarDato: function editarDato(dato) {
+      var _this4 = this;
+
+      console.log(dato);
+      var formulario = "\n                <div id=\"swal2-content\" class=\"swal2-html-container\" style=\"display: block;\">Nombre y apellido:</div>\n                <input class=\"swal2-input\" id=\"nombre\" name=\"nombre\" type=\"text\" style=\"display: flex;\">\n\n                <div id=\"swal2-content\" class=\"swal2-html-container\" style=\"display: block;\">Posicion de este empleado:</div>\n                <select class=\"swal2-select\" id=\"posicion\" name=\"posicion\" style=\"display: flex;\">\n                    <option value=\"\" disabled=\"\">Selecciona una opcion</option>\n                    <option value=\"auditor\">Auditor</option>\n                    <option value=\"soporte\">Soporte</option>\n                    <option value=\"seguridad\">Seguridad</option>\n                </select>\n\n                <div id=\"swal2-content\" class=\"swal2-html-container\" style=\"display: block;\">Salario</div>\n                <input class=\"swal2-input\" id=\"salario\" name=\"salario\" type=\"text\" style=\"display: flex;\">\n            ";
+      Swal.fire({
+        title: "Editar Registro",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Guardar",
+        html: formulario,
+        focusConfirm: false,
+        preConfirm: function () {
+          var _preConfirm = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+            var ultimosDatosEditados, url;
+            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+              while (1) {
+                switch (_context4.prev = _context4.next) {
+                  case 0:
+                    ultimosDatosEditados = {
+                      nombre: document.getElementById("nombre").value,
+                      posicion: document.getElementById("posicion").value,
+                      salario: document.getElementById("salario").value
+                    };
+                    url = "/api/datosp/".concat(dato.id);
+                    _context4.next = 4;
+                    return axios.put(url, ultimosDatosEditados).then(function (response) {
+                      _this4.mensaje = response.data;
+                    });
+
+                  case 4:
+                    _this4.getDatos();
+
+                    return _context4.abrupt("return", toastr.success(_this4.mensaje));
+
+                  case 6:
+                  case "end":
+                    return _context4.stop();
+                }
+              }
+            }, _callee4);
+          }));
+
+          function preConfirm() {
+            return _preConfirm.apply(this, arguments);
+          }
+
+          return preConfirm;
+        }()
+      });
+      document.getElementById("nombre").value = dato.nombre;
+      document.getElementById("posicion").value = dato.posicion;
+      document.getElementById("salario").value = dato.salario;
+      /*
+      if (formValues) {
+          Swal.fire(JSON.stringify(formValues));
+      }
+      */
     }
   },
   mounted: function mounted() {
@@ -42337,6 +42399,12 @@ var render = function () {
                     {
                       staticClass: "btn btn-outline-info",
                       attrs: { type: "button" },
+                      on: {
+                        click: function ($event) {
+                          $event.preventDefault()
+                          return _vm.editarDato(dato)
+                        },
+                      },
                     },
                     [
                       _vm._v(

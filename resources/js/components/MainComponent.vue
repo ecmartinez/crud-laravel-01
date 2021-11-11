@@ -29,6 +29,7 @@
                                 <button
                                     type="button"
                                     class="btn btn-outline-info"
+                                    @click.prevent="editarDato(dato)"
                                 >
                                     Editar
                                 </button>
@@ -94,9 +95,9 @@ export default {
                 text: "Posicion de este empleado",
                 input: "select",
                 inputOptions: {
-                    auditor: "Auditor",
-                    soporte: "Soporte",
-                    seguridad: "Seguridad",
+                    auditor: "auditor",
+                    soporte: "soporte",
+                    seguridad: "seguridad",
                 },
                 inputPlaceholder: "Selecciona una posicion",
                 inputValidator: (value) => {
@@ -203,6 +204,65 @@ export default {
                         toastr.error("Accion cancelada");
                     }
                 });
+        },
+
+        editarDato(dato) {
+            console.log(dato);
+
+            let formulario = `
+                <div id="swal2-content" class="swal2-html-container" style="display: block;">Nombre y apellido:</div>
+                <input class="swal2-input" id="nombre" name="nombre" type="text" style="display: flex;">
+
+                <div id="swal2-content" class="swal2-html-container" style="display: block;">Posicion de este empleado:</div>
+                <select class="swal2-select" id="posicion" name="posicion" style="display: flex;">
+                    <option value="" disabled="">Selecciona una opcion</option>
+                    <option value="auditor">Auditor</option>
+                    <option value="soporte">Soporte</option>
+                    <option value="seguridad">Seguridad</option>
+                </select>
+
+                <div id="swal2-content" class="swal2-html-container" style="display: block;">Salario</div>
+                <input class="swal2-input" id="salario" name="salario" type="text" style="display: flex;">
+            `;
+
+            Swal.fire({
+                title: "Editar Registro",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                cancelButtonText: "Cancelar",
+                confirmButtonText: "Guardar",
+                html: formulario,
+                focusConfirm: false,
+                preConfirm: async () => {
+                    let ultimosDatosEditados = {
+                        nombre: document.getElementById("nombre").value,
+                        posicion: document.getElementById("posicion").value,
+                        salario: document.getElementById("salario").value,
+                    };
+
+                    let url = `/api/datosp/${dato.id}`;
+
+                    await axios
+                        .put(url, ultimosDatosEditados)
+                        .then((response) => {
+                            this.mensaje = response.data;
+                        });
+
+                    this.getDatos();
+                    return toastr.success(this.mensaje);
+                },
+            });
+
+            document.getElementById("nombre").value = dato.nombre;
+            document.getElementById("posicion").value = dato.posicion;
+            document.getElementById("salario").value = dato.salario;
+
+            /*
+            if (formValues) {
+                Swal.fire(JSON.stringify(formValues));
+            }
+            */
         },
     },
     mounted() {
