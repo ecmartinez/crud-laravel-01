@@ -35,6 +35,7 @@
                                 <button
                                     type="button"
                                     class="btn btn-outline-danger"
+                                    @click.prevent="eliminarDato(dato)"
                                 >
                                     Eliminar
                                 </button>
@@ -60,12 +61,12 @@ export default {
             let url = "/api/datosp";
 
             axios.get(url).then((response) => {
-                console.log(response.data);
+                // console.log(response.data);
                 this.datos = response.data;
             });
         },
         async nuevoDato() {
-            console.log("Nuevo Dato");
+            // console.log("Nuevo Dato");
 
             const steps = ["1", "2", "3", "4"];
             const results = {};
@@ -150,6 +151,56 @@ export default {
 
                         this.getDatos();
                         toastr.success(this.mensaje);
+                    }
+                });
+        },
+
+        eliminarDato(dato) {
+            // console.log(dato);
+
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-success",
+                    cancelButton: "btn btn-danger",
+                },
+                buttonsStyling: true,
+            });
+
+            swalWithBootstrapButtons
+                .fire({
+                    title: "¿Estas seguro?",
+                    html: `Si eliminas el registro de <strong>${dato.nombre}</strong>, <br>¡No podras revertir esto!`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Eliminar",
+                    cancelButtonText: "Cancelar",
+                    confirmButtonColor: "#28a745",
+                    cancelButtonColor: "#d33",
+                    reverseButtons: true,
+                })
+                .then(async (result) => {
+                    // console.log(result);
+                    // console.log(dato.id);
+                    if (result.value) {
+                        let url = `api/datosp/${dato.id}`;
+
+                        await axios.delete(url).then((response) => {
+                            console.log(response.data);
+                            this.mensaje = response.data;
+                        });
+
+                        this.getDatos();
+                        toastr.success(this.mensaje);
+
+                        /*
+                        swalWithBootstrapButtons.fire(
+                            "Deleted!",
+                            "Your file has been deleted.",
+                            "success"
+                        );
+                        */
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        toastr.error("Accion cancelada");
                     }
                 });
         },

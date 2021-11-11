@@ -2133,6 +2133,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -2146,7 +2147,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       var url = "/api/datosp";
       axios.get(url).then(function (response) {
-        console.log(response.data);
+        // console.log(response.data);
         _this.datos = response.data;
       });
     },
@@ -2159,14 +2160,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                console.log("Nuevo Dato");
+                // console.log("Nuevo Dato");
                 steps = ["1", "2", "3", "4"];
                 results = {};
                 swalQueue = Swal.mixin({
                   progressSteps: steps,
                   confirmButtonText: "Next >"
                 });
-                _context2.next = 6;
+                _context2.next = 5;
                 return swalQueue.fire({
                   title: "Escribe tu nombre completo:",
                   text: "Nombre y Apellido",
@@ -2182,8 +2183,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   currentProgressStep: 0
                 });
 
-              case 6:
-                _context2.next = 8;
+              case 5:
+                _context2.next = 7;
                 return swalQueue.fire({
                   title: "Selecciona la posicion:",
                   text: "Posicion de este empleado",
@@ -2205,8 +2206,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   currentProgressStep: 1
                 });
 
-              case 8:
-                _context2.next = 10;
+              case 7:
+                _context2.next = 9;
                 return swalQueue.fire({
                   title: "Escribe el salario de este empleado",
                   text: "Este campo acepta decimales",
@@ -2272,13 +2273,86 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   };
                 }());
 
-              case 10:
+              case 9:
               case "end":
                 return _context2.stop();
             }
           }
         }, _callee2);
       }))();
+    },
+    eliminarDato: function eliminarDato(dato) {
+      var _this3 = this;
+
+      // console.log(dato);
+      var swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: "btn btn-success",
+          cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: true
+      });
+      swalWithBootstrapButtons.fire({
+        title: "¿Estas seguro?",
+        html: "Si eliminas el registro de <strong>".concat(dato.nombre, "</strong>, <br>\xA1No podras revertir esto!"),
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Eliminar",
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: "#28a745",
+        cancelButtonColor: "#d33",
+        reverseButtons: true
+      }).then( /*#__PURE__*/function () {
+        var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3(result) {
+          var url;
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+            while (1) {
+              switch (_context3.prev = _context3.next) {
+                case 0:
+                  if (!result.value) {
+                    _context3.next = 8;
+                    break;
+                  }
+
+                  url = "api/datosp/".concat(dato.id);
+                  _context3.next = 4;
+                  return axios["delete"](url).then(function (response) {
+                    console.log(response.data);
+                    _this3.mensaje = response.data;
+                  });
+
+                case 4:
+                  _this3.getDatos();
+
+                  toastr.success(_this3.mensaje);
+                  /*
+                  swalWithBootstrapButtons.fire(
+                      "Deleted!",
+                      "Your file has been deleted.",
+                      "success"
+                  );
+                  */
+
+                  _context3.next = 9;
+                  break;
+
+                case 8:
+                  if (result.dismiss === Swal.DismissReason.cancel) {
+                    toastr.error("Accion cancelada");
+                  }
+
+                case 9:
+                case "end":
+                  return _context3.stop();
+              }
+            }
+          }, _callee3);
+        }));
+
+        return function (_x2) {
+          return _ref2.apply(this, arguments);
+        };
+      }());
     }
   },
   mounted: function mounted() {
@@ -2353,6 +2427,14 @@ try {
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+var token = document.head.querySelector('meta[name="csrf-token"]');
+
+if (token) {
+  window.axios.defaults.headers.common["X-CSRF-TOKEN"] = token.content;
+} else {
+  console.error("CSRF token not found: https://laravel.com/docs/csrf#csrf-xcsrf-token");
+}
+
 window.toastr = __webpack_require__(/*! toastr */ "./node_modules/toastr/toastr.js");
 window.Swal = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
 /**
@@ -42249,7 +42331,39 @@ var render = function () {
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(dato.salario))]),
                 _vm._v(" "),
-                _vm._m(1, true),
+                _c("td", [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-outline-info",
+                      attrs: { type: "button" },
+                    },
+                    [
+                      _vm._v(
+                        "\n                                Editar\n                            "
+                      ),
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-outline-danger",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function ($event) {
+                          $event.preventDefault()
+                          return _vm.eliminarDato(dato)
+                        },
+                      },
+                    },
+                    [
+                      _vm._v(
+                        "\n                                Eliminar\n                            "
+                      ),
+                    ]
+                  ),
+                ]),
               ])
             }),
             0
@@ -42276,32 +42390,6 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Acciones")]),
       ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c(
-        "button",
-        { staticClass: "btn btn-outline-info", attrs: { type: "button" } },
-        [
-          _vm._v(
-            "\n                                Editar\n                            "
-          ),
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-outline-danger", attrs: { type: "button" } },
-        [
-          _vm._v(
-            "\n                                Eliminar\n                            "
-          ),
-        ]
-      ),
     ])
   },
 ]
